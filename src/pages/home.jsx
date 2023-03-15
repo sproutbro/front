@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   CardBody,
@@ -13,8 +13,24 @@ import { UsersIcon } from "@heroicons/react/24/solid";
 import { PageTitle, Footer } from "@/widgets/layout";
 import { FeatureCard, TeamCard } from "@/widgets/cards";
 import { featuresData, teamData, contactData } from "@/data";
+import restApi from "@/api";
 
 export function Home() {
+  const [response, setResponse] = React.useState(null);
+
+  const getTestApi = async () => {
+    const { data } = await restApi.get("/test/1");
+    console.log(data);
+    setResponse(data);
+  };
+  useEffect(() => {
+    try {
+      getTestApi();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  console.log(response);
   return (
     <>
       <div className="relative flex h-screen content-center items-center justify-center pt-16 pb-32">
@@ -28,7 +44,7 @@ export function Home() {
                 color="white"
                 className="mb-6 font-black"
               >
-                하하하하하하
+                {response ? `axios 성공: ${response}` : "axios 실패"}
               </Typography>
               <Typography variant="lead" color="white" className="opacity-80">
                 This is a simple example of a Landing Page you can build using
