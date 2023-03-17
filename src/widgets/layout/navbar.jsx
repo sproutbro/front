@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   Navbar as MTNavbar,
   MobileNav,
@@ -12,6 +12,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export function Navbar({ brandName, routes, action }) {
   const [openNav, setOpenNav] = React.useState(false);
+  const params = useLocation();
 
   React.useEffect(() => {
     window.addEventListener(
@@ -19,6 +20,10 @@ export function Navbar({ brandName, routes, action }) {
       () => window.innerWidth >= 960 && setOpenNav(false)
     );
   }, []);
+
+  React.useEffect(() => {
+    setOpenNav(false);
+  }, [params]);
 
   const navList = (
     <ul className="mb-4 mt-2 flex flex-col gap-2 text-inherit lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -64,7 +69,7 @@ export function Navbar({ brandName, routes, action }) {
     <MTNavbar color="transparent" className="p-3">
       <div className="container mx-auto flex items-center justify-between text-white">
         <Link to="/">
-          <Typography className="mr-4 ml-2 cursor-pointer py-1.5 font-bold">
+          <Typography className="mr-4 ml-2 cursor-pointer py-1.5 text-xl font-bold">
             {brandName}
           </Typography>
         </Link>
@@ -121,7 +126,7 @@ export function Navbar({ brandName, routes, action }) {
 }
 
 Navbar.defaultProps = {
-  brandName: "여기래요",
+  brandName: "힐링",
   action: (
     <a
       href="https://www.creative-tim.com/product/material-tailwind-kit-react"

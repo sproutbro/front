@@ -7,24 +7,21 @@ import {
 export const featuresData = [
   {
     color: "blue",
-    title: "Awarded Agency",
+    title: "지역별",
     icon: StarIcon,
-    description:
-      "Divide details about your product or agency work into parts. A paragraph describing a feature will be enough.",
+    description: "지역별 검색",
   },
   {
     color: "red",
-    title: "Free Revisions",
+    title: "테마별",
     icon: ArrowPathIcon,
-    description:
-      "Keep you user engaged by providing meaningful information. Remember that by this time, the user is curious.",
+    description: "테마별 검색",
   },
   {
     color: "teal",
-    title: "Verified Company",
+    title: "후기",
     icon: FingerPrintIcon,
-    description:
-      "Write a few lines about each one. A paragraph describing a feature will be enough. Keep you user engaged!",
+    description: "사용자 후기 게시판",
   },
 ];
 

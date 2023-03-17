@@ -14,27 +14,20 @@ import { PageTitle, Footer } from "@/widgets/layout";
 import { FeatureCard, TeamCard } from "@/widgets/cards";
 import { featuresData, teamData, contactData } from "@/data";
 import restApi from "@/api";
+import { Link } from "react-router-dom";
 
 export function Home() {
   const [response, setResponse] = React.useState(null);
 
   const getTestApi = async () => {
     const { data } = await restApi.get("/test/1");
-    console.log(data);
     setResponse(data);
   };
-  useEffect(() => {
-    try {
-      getTestApi();
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-  console.log(response);
+
   return (
     <>
       <div className="relative flex h-screen content-center items-center justify-center pt-16 pb-32">
-        <div className="absolute top-0 h-full w-full bg-[url('https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1267&q=80')] bg-cover bg-center" />
+        <div className="absolute top-0 h-full w-full bg-[url('/img/background-3.jpg')] bg-cover bg-center" />
         <div className="absolute top-0 h-full w-full bg-black/75 bg-cover bg-center" />
         <div className="max-w-8xl container relative mx-auto">
           <div className="flex flex-wrap items-center">
@@ -44,12 +37,15 @@ export function Home() {
                 color="white"
                 className="mb-6 font-black"
               >
-                {response ? `axios 성공: ${response}` : "axios 실패"}
+                <Button variant="outlined" onClick={getTestApi}>
+                  API 테스트
+                </Button>
               </Typography>
               <Typography variant="lead" color="white" className="opacity-80">
-                This is a simple example of a Landing Page you can build using
-                Material Tailwind. It features multiple components based on the
-                Tailwind CSS and Material Design by Google.
+                {response && `테스트 성공: ${response}`}
+              </Typography>
+              <Typography variant="lead" color="white" className="opacity-80">
+                Material Tailwind를 활용한 화면구성
               </Typography>
             </div>
           </div>
@@ -59,15 +55,17 @@ export function Home() {
         <div className="container mx-auto">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {featuresData.map(({ color, title, icon, description }) => (
-              <FeatureCard
-                key={title}
-                color={color}
-                title={title}
-                icon={React.createElement(icon, {
-                  className: "w-5 h-5 text-white",
-                })}
-                description={description}
-              />
+              <Link>
+                <FeatureCard
+                  key={title}
+                  color={color}
+                  title={title}
+                  icon={React.createElement(icon, {
+                    className: "w-5 h-5 text-white",
+                  })}
+                  description={description}
+                />
+              </Link>
             ))}
           </div>
           <div className="mt-32 flex flex-wrap items-center">
