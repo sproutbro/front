@@ -20,8 +20,12 @@ export function Home() {
   const [response, setResponse] = React.useState(null);
 
   const getTestApi = async () => {
-    const { data } = await restApi.get("/test/1");
-    setResponse(data);
+    try {
+      const { data } = await restApi.get("/test/1");
+      setResponse(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -54,10 +58,9 @@ export function Home() {
       <section className="-mt-32 bg-gray-50 px-4 pb-20 pt-4">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {featuresData.map(({ color, title, icon, description }) => (
-              <Link>
+            {featuresData.map(({ color, title, icon, description, path }) => (
+              <Link key={title} to={path}>
                 <FeatureCard
-                  key={title}
                   color={color}
                   title={title}
                   icon={React.createElement(icon, {

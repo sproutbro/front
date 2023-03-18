@@ -1,11 +1,13 @@
-import { Home, Profile, SignIn, SignUp, Test } from "@/pages";
+import { Board, Home, Profile, SignIn, SignUp } from "@/pages";
 import {
   HomeIcon,
   UserCircleIcon,
   ArrowRightOnRectangleIcon,
   UserPlusIcon,
   DocumentTextIcon,
+  ClipboardIcon,
 } from "@heroicons/react/24/solid";
+import PostCreate from "./pages/post-create";
 
 export const routes = [
   {
@@ -33,10 +35,10 @@ export const routes = [
     element: <SignUp />,
   },
   {
-    icon: UserPlusIcon,
-    name: "테스트",
-    path: "/test",
-    element: <Test />,
+    icon: ClipboardIcon,
+    name: "게시판",
+    path: "/board",
+    element: <Board />,
   },
   {
     icon: DocumentTextIcon,
@@ -44,6 +46,12 @@ export const routes = [
     href: "https://www.material-tailwind.com/docs/react/installation",
     target: "_blank",
     element: "",
+  },
+  {
+    icon: ClipboardIcon,
+    name: "글쓰기",
+    path: "/board/detail",
+    element: <PostCreate />,
   },
 ];
 

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -14,43 +14,35 @@ import React, { useCallback, useState } from "react";
 import restApi from "@/api";
 
 export function SignUp() {
+  const navigate = useNavigate();
   //회원가입 기본요소
   const [requestBody, setRequestBody] = useState({
-    userName: null,
+    username: null,
     email: null,
     password: null,
   });
 
   //오류메시지 상태저장
-  const [userNameMessage, setuserNameMessage] = useState("");
+  const [usernameMessage, setusernameMessage] = useState("");
   const [emailMessage, setEmailMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
+  const [nameCheckMessage, setNameCheckMessage] = useState("");
 
   // 유효성 검사
-  const [isuserName, setIsuserName] = useState(false);
+  const [isusername, setIsusername] = useState(false);
   const [isEmail, setIsEmail] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
+  const [isDuplicate, setIsDuplicate] = useState(false);
   const [nameCheck, setNameCheck] = useState(false);
-
-  //회원가입 버튼 눌렀을때
-  const handleSignUp = async () => {
-    try {
-      const response = await restApi.post("/api/auth/register", requestBody);
-      console.log(response);
-    } catch (error) {
-      console.log("회원가입 error:::", error);
-    }
-  };
 
   // 이름유효성
   const onChangeName = useCallback((e) => {
-    setRequestBody((prev) => ({ ...prev, userName: e.target.value }));
+    setRequestBody((prev) => ({ ...prev, username: e.target.value }));
     if (e.target.value.length < 2 || e.target.value.length > 10) {
-      setuserNameMessage("2글자 이상 10글자 이하로 입력해주세요.");
-      setIsuserName(false);
+      setusernameMessage("2글자 이상 10글자 이하로 입력해주세요.");
+      setIsusername(false);
     } else {
-      setuserNameMessage("올바른 이름 형식입니다 :)");
-      setIsuserName(true);
+      setIsusername(true);
     }
   }, []);
 
@@ -65,7 +57,6 @@ export function SignUp() {
       setEmailMessage("이메일 형식이 틀렸어요! 다시 확인해주세요 ㅜ ㅜ");
       setIsEmail(false);
     } else {
-      setEmailMessage("올바른 이메일 형식이에요 : )");
       setIsEmail(true);
     }
   }, []);
@@ -74,8 +65,6 @@ export function SignUp() {
   const onChangePassword = useCallback((e) => {
     const passwordRegex =
       /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
-
-    ("^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?&])[A-Za-zd@$!%*#?&]{8,}$");
 
     const passwordCurrent = e.target.value;
     setRequestBody((prev) => ({ ...prev, password: e.target.value }));
@@ -86,20 +75,20 @@ export function SignUp() {
       );
       setIsPassword(false);
     } else {
-      setPasswordMessage("안전한 비밀번호에요 : )");
       setIsPassword(true);
     }
   }, []);
 
   //아이디 중복검사
-
   const handleNameCheck = async () => {
     try {
-      const response = await restApi.post(
-        "/api/auth/check-duplicate-id",
-        requestBody?.userName
-      );
+      const response = await restApi.post("/api/auth/check-duplicate-id", {
+        username: requestBody?.username,
+      });
       setNameCheck(true);
+      setNameCheckMessage(response.data);
+      console.log(response);
+      if (response.data === "사용 가능한 아이디 입니다.") setIsDuplicate(true);
     } catch (error) {
       console.log(error);
     }
@@ -107,7 +96,19 @@ export function SignUp() {
 
   React.useEffect(() => {
     setNameCheck(false);
-  }, [requestBody.userName]);
+  }, [requestBody.username]);
+
+  //회원가입 버튼 눌렀을때
+  const handleSignUp = async () => {
+    try {
+      const response = await restApi.post("/api/auth/register", requestBody);
+      alert("가입완료");
+      navigate("/sign-in");
+    } catch (error) {
+      console.log("회원가입 error:::", error);
+    }
+  };
+
   return (
     <>
       <img
@@ -132,23 +133,26 @@ export function SignUp() {
                 variant="standard"
                 label="닉네임"
                 size="lg"
-                error={requestBody?.userName?.length > 0 && !isuserName && true}
+                error={requestBody?.username?.length > 0 && !isusername && true}
                 onChange={(e) => {
                   onChangeName(e);
                 }}
               />
 
-              {!isuserName && requestBody?.userName ? (
-                <span className="text-sm text-red-400">{userNameMessage}</span>
-              ) : nameCheck && requestBody?.userName ? (
-                <span className="text-sm text-blue-400">
-                  사용가능한 아이디 입니다
-                </span>
-              ) : (
-                <Button className="mt-1" size="sm" onClick={handleNameCheck}>
-                  아이디 중복확인
-                </Button>
-              )}
+              {requestBody?.username &&
+                (!isusername ? (
+                  <span className="text-sm text-red-400">
+                    {usernameMessage}
+                  </span>
+                ) : nameCheck ? (
+                  <span className="text-sm text-blue-400">
+                    {nameCheckMessage}
+                  </span>
+                ) : (
+                  <Button className="mt-1" size="sm" onClick={handleNameCheck}>
+                    닉네임 중복확인
+                  </Button>
+                ))}
             </div>
 
             <div>
@@ -192,7 +196,7 @@ export function SignUp() {
               fullWidth
               onClick={handleSignUp}
               disabled={
-                (!isuserName || !isPassword || !isEmail || !nameCheck) && true
+                (!isusername || !isPassword || !isEmail || !isDuplicate) && true
               }
             >
               가입하기

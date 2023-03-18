@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -10,8 +10,41 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { SimpleFooter } from "@/widgets/layout";
+import restApi from "@/api";
+import React, { useCallback, useState } from "react";
 
 export function SignIn() {
+  const navigate = useNavigate();
+  const [requestBody, setRequestBody] = useState({
+    username: null,
+    password: null,
+  });
+
+  const handleSignIn = useCallback(async () => {
+    try {
+      const response = await restApi.post("/api/auth/login", requestBody);
+      const token = response.headers.get("Authorization").split(" ")[1];
+      localStorage.setItem("access_token", token);
+      navigate("/home");
+    } catch (error) {
+      console.log(error.headers.get("Authorization"));
+    }
+  }, [requestBody]);
+
+  const handleUsernameChange = (e) => {
+    setRequestBody((prev) => ({
+      ...prev,
+      username: e.target.value,
+    }));
+  };
+
+  const handlePasswordChange = (e) => {
+    setRequestBody((prev) => ({
+      ...prev,
+      password: e.target.value,
+    }));
+  };
+
   return (
     <>
       <img
@@ -27,23 +60,30 @@ export function SignIn() {
             className="mb-4 grid h-28 place-items-center"
           >
             <Typography variant="h3" color="white">
-              Sign In
+              로그인
             </Typography>
           </CardHeader>
+
           <CardBody className="flex flex-col gap-4">
-            <Input variant="standard" type="email" label="Email" size="lg" />
+            <Input
+              variant="standard"
+              label="닉네임"
+              size="lg"
+              onChange={handleUsernameChange}
+            />
             <Input
               variant="standard"
               type="password"
               label="Password"
               size="lg"
+              onChange={handlePasswordChange}
             />
             <div className="-ml-2.5">
               <Checkbox label="Remember Me" />
             </div>
           </CardBody>
           <CardFooter className="pt-0">
-            <Button variant="gradient" fullWidth>
+            <Button variant="gradient" fullWidth onClick={handleSignIn}>
               Sign In
             </Button>
             <Typography variant="small" className="mt-6 flex justify-center">
