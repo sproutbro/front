@@ -45,9 +45,13 @@ export function Home() {
                   API 테스트
                 </Button>
               </Typography>
-              <Typography variant="lead" color="white" className="opacity-80">
-                {response && `테스트 성공: ${response}`}
-              </Typography>
+
+              {response && (
+                <Typography variant="lead" color="white" className="opacity-80">
+                  테스트 성공: {response}
+                </Typography>
+              )}
+
               <Typography variant="lead" color="white" className="opacity-80">
                 Material Tailwind를 활용한 화면구성
               </Typography>

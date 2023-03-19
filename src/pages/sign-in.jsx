@@ -27,7 +27,7 @@ export function SignIn() {
       localStorage.setItem("access_token", token);
       navigate("/home");
     } catch (error) {
-      console.log(error.headers.get("Authorization"));
+      console.log(error);
     }
   }, [requestBody]);
 

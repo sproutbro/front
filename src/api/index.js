@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const restApi = axios.create({ baseURL: "http://144.24.92.60:8080" });
+const baseUrl = import.meta.env.VITE_API_URL;
+const restApi = axios.create({ baseURL: baseUrl });
 
 // Axios Interceptor 생성
 restApi.interceptors.request.use(

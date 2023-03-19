@@ -1,4 +1,12 @@
-import { Board, Home, Profile, SignIn, SignUp } from "@/pages";
+import {
+  Board,
+  Home,
+  Profile,
+  SignIn,
+  SignUp,
+  BoardCreate,
+  BoardDetail,
+} from "@/pages";
 import {
   HomeIcon,
   UserCircleIcon,
@@ -7,7 +15,6 @@ import {
   DocumentTextIcon,
   ClipboardIcon,
 } from "@heroicons/react/24/solid";
-import PostCreate from "./pages/post-create";
 
 export const routes = [
   {
@@ -41,17 +48,17 @@ export const routes = [
     element: <Board />,
   },
   {
-    icon: DocumentTextIcon,
-    name: "문서",
-    href: "https://www.material-tailwind.com/docs/react/installation",
-    target: "_blank",
-    element: "",
+    icon: ClipboardIcon,
+    name: "상세보기",
+    path: "/board/:id",
+    element: <BoardDetail />,
   },
+
   {
     icon: ClipboardIcon,
     name: "글쓰기",
-    path: "/board/detail",
-    element: <PostCreate />,
+    path: "/board/edit",
+    element: <BoardCreate />,
   },
 ];
 

@@ -1,1 +1,1 @@
-export * from "@/components/validate";
+export * from "@/components/editor";
