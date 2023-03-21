@@ -15,6 +15,7 @@ import { FeatureCard, TeamCard } from "@/widgets/cards";
 import { featuresData, teamData, contactData } from "@/data";
 import restApi from "@/api";
 import { Link } from "react-router-dom";
+import { randomNum } from "@/components/randomBGI";
 
 export function Home() {
   const [response, setResponse] = React.useState(null);
@@ -31,7 +32,12 @@ export function Home() {
   return (
     <>
       <div className="relative flex h-screen content-center items-center justify-center pt-16 pb-32">
-        <div className="absolute top-0 h-full w-full bg-[url('/img/background-3.jpg')] bg-cover bg-center" />
+        <div
+          className={
+            "absolute top-0 h-full w-full bg-cover bg-center " +
+            `bg-[url('/img/background-${randomNum()}.jpg')]`
+          }
+        />
         <div className="absolute top-0 h-full w-full bg-black/75 bg-cover bg-center" />
         <div className="max-w-8xl container relative mx-auto">
           <div className="flex flex-wrap items-center">

@@ -5,12 +5,18 @@ import {
   BuildingLibraryIcon,
 } from "@heroicons/react/24/solid";
 import { Footer } from "@/widgets/layout";
+import { randomNum } from "@/components/randomBGI";
 
 export function Profile() {
   return (
     <>
       <section className="relative block h-[50vh]">
-        <div className="bg-profile-background absolute top-0 h-full w-full bg-[url('/img/background-1.jpg')] bg-cover bg-center" />
+        <div
+          className={
+            "absolute top-0 h-full w-full bg-cover bg-center " +
+            `bg-[url('/img/background-${randomNum()}.jpg')]`
+          }
+        />
         <div className="absolute top-0 h-full w-full bg-black/75 bg-cover bg-center" />
       </section>
       <section className="relative bg-blue-gray-50/50 py-16 px-4">

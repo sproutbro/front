@@ -12,6 +12,7 @@ import {
 import { SimpleFooter } from "@/widgets/layout";
 import restApi from "@/api";
 import React, { useCallback, useState } from "react";
+import { randomNum } from "@/components/randomBGI";
 
 export function SignIn() {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ export function SignIn() {
   return (
     <>
       <img
-        src="/img/background-2.jpg"
+        src={`/img/background-${randomNum()}.jpg`}
         className="absolute inset-0 z-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 z-0 h-full w-full bg-black/50" />

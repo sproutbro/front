@@ -8,20 +8,31 @@ import {
   Checkbox,
   Button,
   Typography,
+  Avatar,
 } from "@material-tailwind/react";
 import React, { useCallback, useEffect, useState } from "react";
 import restApi from "@/api";
 import moment from "moment/moment";
+import {
+  BriefcaseIcon,
+  BuildingLibraryIcon,
+  MapPinIcon,
+} from "@heroicons/react/24/solid";
+import Pagination from "@/components/pagination";
+import { randomNum } from "@/components/randomBGI";
 
 export function Board() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [limit, setLimit] = React.useState(10);
+  const [page, setPage] = React.useState(1);
+  const offset = (page - 1) * limit;
 
   const getPosts = async () => {
     try {
       const response = await restApi.get("api/board");
       console.log(response.data);
-      setPosts(response.data);
+      setPosts(response.data.sort((a, b) => b.id - a.id));
       setLoading(false);
     } catch (error) {
       console.log("getPosts error::", error);
@@ -35,7 +46,11 @@ export function Board() {
   // }, []);
 
   useEffect(() => {
+    console.log(loading, "로딩상태체크");
     getPosts();
+    return () => {
+      setLoading(true);
+    };
   }, []);
 
   return (
@@ -44,102 +59,93 @@ export function Board() {
         <div>로딩중</div>
       ) : (
         <>
-          <img
-            src="/img/background-2.jpg"
-            className="absolute inset-0 z-0 h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 z-0 h-full w-full bg-black/50" />
-          <div className="container mx-auto p-4">
-            <Card className="absolute top-2/4 left-2/4  w-full max-w-[72rem] -translate-y-2/4 -translate-x-2/4 items-center">
+          <section className="relative block h-[25vh]">
+            <div
+              className={
+                "absolute top-0 h-full w-full bg-cover bg-center " +
+                `bg-[url('/img/background-${randomNum()}.jpg')]`
+              }
+            />
+            <div className="absolute top-0 h-full w-full bg-black/75 bg-cover bg-center" />
+          </section>
+          <section className="relative bg-blue-gray-50/50 py-16 px-4">
+            <div className="container mx-auto">
               <CardHeader
                 variant="gradient"
                 color="blue"
-                className="mb-4 -mt-10 grid h-28 w-3/5 place-items-center"
+                className="relative mb-4 -mt-28 mb-6 -ml-0 flex grid h-20 w-full min-w-0 flex-col place-items-center break-words rounded-3xl bg-white  shadow-xl"
               >
                 <Typography variant="h3" color="white">
-                  게시글 목록
+                  자유게시판
                 </Typography>
               </CardHeader>
-              <div className="overflow-x-autom relative mb-10 mt-10 max-h-96">
-                <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-                  <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="px-6 py-3">
-                        번호
-                      </th>
-                      <th scope="col" className="px-16 py-3">
-                        제목
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-center">
-                        작성자
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-center">
-                        날짜
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-center">
-                        조회수
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {posts.length > 0 &&
-                      posts.map((post) => (
-                        <tr
-                          className="border-b bg-white dark:border-gray-700 dark:bg-gray-800 "
-                          key={post.id}
-                        >
-                          <th className="px-6 py-4 text-center">{post.id}</th>
-
-                          <th
-                            scope="row"
-                            className="whitespace-nowrap  py-4 font-medium text-gray-900 hover:text-gray-500 dark:text-white"
+              <div className="rounded-3xl bg-white p-12">
+                <div className="overflow-x-autom relative">
+                  <table className="mb-6  w-full text-left  text-xs text-gray-500 dark:text-gray-400">
+                    <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+                      <tr>
+                        <th scope="col" className="px-2 py-3">
+                          번호
+                        </th>
+                        <th scope="col" className="px-16 py-3">
+                          제목
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-center">
+                          작성자
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-center">
+                          날짜
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-center">
+                          조회수
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {posts.length > 0 &&
+                        posts.slice(offset, offset + limit).map((post) => (
+                          <tr
+                            className=" border-b bg-white dark:border-gray-700 dark:bg-gray-800"
+                            key={post.id}
                           >
-                            <Link to={`/board/${post.id}`}>{post.title}</Link>
-                          </th>
+                            <th className="px-2 py-3">{post.id}</th>
 
-                          <th className=" px-6 py-4 text-center">
-                            {post.author}
-                          </th>
-                          <th className="px-6 py-4 text-center">
-                            {moment(post.createdAt).format("YY.MM.DD")}
-                          </th>
+                            <th
+                              scope="row"
+                              className="whitespace-nowrap  py-4 font-medium text-gray-900 hover:text-gray-500 dark:text-white"
+                            >
+                              <Link to={`/board/${post.id}`}>{post.title}</Link>
+                            </th>
 
-                          <th className="px-6 py-4 text-center">
-                            {post.views}
-                          </th>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
+                            <th className=" px-6 py-4 text-center">
+                              {post.author}
+                            </th>
+                            <th className="px-6 py-4 text-center">
+                              {moment(post.createdAt).format("YY.MM.DD")}
+                            </th>
+
+                            <th className="px-6 py-4 text-center">
+                              {post.views}
+                            </th>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                  <div className="text-right">
+                    <Link to={"/board/edit"}>
+                      <Button variant="gradient">게시글 작성</Button>
+                    </Link>
+                  </div>
+                  <Pagination
+                    total={posts.length}
+                    limit={limit}
+                    page={page}
+                    setPage={setPage}
+                  />
+                </div>
               </div>
-              <CardFooter className="pt-0">
-                <Link to={"/board/edit"}>
-                  <Button variant="gradient" fullWidth>
-                    게시글 작성
-                  </Button>
-                </Link>
-                <Typography
-                  variant="small"
-                  className="mt-6 flex justify-center"
-                >
-                  이미 계정이 있으신가요?
-                  <Link to="/sign-in">
-                    <Typography
-                      as="span"
-                      variant="small"
-                      color="blue"
-                      className="ml-1 font-bold"
-                    >
-                      로그인
-                    </Typography>
-                  </Link>
-                </Typography>
-              </CardFooter>
-            </Card>
-          </div>
-          <div className="container absolute bottom-6 left-2/4 z-10 mx-auto -translate-x-2/4 text-white">
-            {/* <SimpleFooter brandName={"test"} /> */}
-          </div>
+            </div>
+          </section>
         </>
       )}
     </>
