@@ -22,6 +22,7 @@ export const routes = [
     name: "홈",
     path: "/home",
     element: <Home />,
+    href: "있음",
   },
   {
     icon: UserCircleIcon,

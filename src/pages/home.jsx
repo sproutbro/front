@@ -110,8 +110,9 @@ export function Home() {
                 <CardHeader className="relative h-56">
                   <img
                     alt="Card Image"
-                    src="/img/teamwork.jpeg"
-                    className="h-full w-full"
+                    src="/img/jwy.jpg"
+                    className="h-full w-full animate-[wiggle_1s_ease-in-out_infinite]"
+                    style={{ objectFit: "contain" }}
                   />
                 </CardHeader>
                 <CardBody>
